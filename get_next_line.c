@@ -6,7 +6,7 @@
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 22:21:19 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/11/12 23:56:26 by pmigeon          ###   ########.fr       */
+/*   Updated: 2018/11/15 12:37:42 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,49 @@ int    get_next_line(const int fd, char **line)
 	ft_eol = ft_strchr(buf[fd], '\n') + 1;
 	buf[fd][ft_strchri(buf[fd], '\n')] = '\0';
 	*line = ft_strdup(buf[fd]);
-	//printf("line is %s\n", *line);
 	ft_bzero(buf[fd], ft_strlen(buf[fd]));
 	if (bits_read <= 0)
 		return ((bits_read == 0) ? 0 : -1);
 	return (1);
 }
+
+int				main(void)
+{
+	char		*line;
+	int			fd;
+	int			ret;
+	int			count_lines;
+	int			errors;
+
+	fd = 0;
+	count_lines = 0;
+	errors = 0;
+	line = NULL;
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		if (count_lines == 0 && strcmp(line, "1234567") != 0)
+			errors++;
+		if (count_lines == 1 && strcmp(line, "abcdefg") != 0)
+			errors++;
+		if (count_lines == 2 && strcmp(line, "4567890") != 0)
+			errors++;
+		if (count_lines == 3 && strcmp(line, "defghijk") != 0)
+			errors++;
+		count_lines++;
+		printf("line is %s", line);
+		if (count_lines > 50)
+			break ;
+	}
+	if (count_lines != 4)
+		printf("-> must have returned '1' four times instead of %d time(s)\n", count_lines);
+	if (errors > 0)
+		printf("-> must have read \"1234567\", \"abcdefg\", \"4567890\" and \"defghijk\"\n");
+	if (count_lines == 4 && errors == 0)
+		printf("OK\n");
+	return (0);
+}
+
+
 /*
 #include <string.h>
 #include <stdio.h>
