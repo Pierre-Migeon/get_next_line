@@ -1,79 +1,116 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/05 12:59:14 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/11/08 17:58:31 by pmigeon          ###   ########.fr       */
+/*   Created: 2018/11/12 22:21:19 by pmigeon           #+#    #+#             */
+/*   Updated: 2018/11/12 23:56:26 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include "./libft/libft.h"
 #include "get_next_line.h"
 #include <stdio.h>
 
-void	get_full_line(const int fd, char *line, char **buf)
+int    ft_strchri(const char *s, int c)
 {
-	int	size_read;
-	
-	while (!ft_strchr((const char *)line, '\n'))
-	{
-		line = ft_strjoin((const char *)line, (const char *)buf[fd]);
-		size_read = read(fd, buf[fd], BUFF_SIZE);
-		if (size_read == 0)
-			break ;
-	}
+    size_t i;
+
+    i = -1;
+    while (++i < ft_strlen(s) + 1)
+        if (s[i] == (char)c)
+            return (i);
+    return (-1);
 }
 
-int		get_next_line(const int fd, char **line)
+int     ft_strchrc(const char *s, int c)
 {
-	static char *buf[4864];
-	int			size_read;
+	size_t i;
+	size_t i2;
 
-	if (BUFF_SIZE < 1 || !fd || fd < 0)
+	i = -1;
+	i2 = 0;
+       while (++i < ft_strlen(s) + 1)
+               if (s[i] == (char)c)
+                       ++i2;
+       return (i2);
+}
+
+int    get_next_line(const int fd, char **line)
+{
+	int bits_read;
+	char *buf[5000];
+	char temp[BUFF_SIZE + 1];
+	static char *ft_eol = NULL;
+
+	bits_read = 1;
+	if (!fd || fd < 0 || BUFF_SIZE < 1)
 		return (-1);
 	if (!buf[fd])
+		buf[fd] = ft_strnew(BUFF_SIZE + 1);
+	if (ft_eol)
+		buf[fd] = ft_strjoinfree(buf[fd], ft_eol);
+	while (!ft_strchr(buf[fd], '\n') && (bits_read = read(fd, temp, BUFF_SIZE)))
 	{
-		if (!(buf[fd] = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1))))
-			return (-1);
-		ft_bzero(buf[fd], BUFF_SIZE + 1);
+		temp[bits_read] = '\0';
+		buf[fd] = ft_strjoinfree(buf[fd], temp);
 	}
-	size_read = read(fd, buf[fd], BUFF_SIZE);
-	if (size_read <= 0)
-		return (size_read == 0 ? 0 : -1);
-	if (size_read <= BUFF_SIZE)
-	{
-		*line = strndup(buf[fd], size_read);
-		if (!ft_strchr((const char *)line, '\n'))
-			get_full_line(fd, *line, buf);
-		return (1);
-	}
-	return (0);
+	ft_eol = ft_strchr(buf[fd], '\n') + 1;
+	buf[fd][ft_strchri(buf[fd], '\n')] = '\0';
+	*line = ft_strdup(buf[fd]);
+	ft_bzero(buf[fd], ft_strlen(buf[fd]));
+	if (bits_read <= 0)
+		return ((bits_read == 0) ? 0 : -1);
+	return (1);
 }
 
-#include <fcntl.h>
 #include <stdio.h>
-int		main(int argc, char **argv)
+#include <fcntl.h>
+#include <assert.h>
+int    main(int argc, char **argv)
 {
-	char *str;
-	int fd;
-	int	i;
 
-	i = 1;
-	if (argc >= 2)
-	{
-		while (i < argc)
-		{
-			fd = open(argv[i], O_RDONLY);
-			while (get_next_line(fd, &str) == 1)
-			{
-				printf("%s", str);
-				free(str);
-			}
-			close(fd);
-			i++;
-		}
-	}
-	return (0);
-}
+	char 	*line;
+
+	write(1, "aaa\nbbb\nccc\nddd\n", 16);
+	get_next_line(1, &line);
+	assert(strcmp(line, "aaa") == 0);
+	get_next_line(1, &line);
+	assert(strcmp(line, "bbb") == 0);
+	get_next_line(1, &line);
+	assert(strcmp(line, "ccc") == 0);
+	get_next_line(1, &line);
+	assert(strcmp(line, "ddd") == 0);
+argc = 0 ;
+if (argv[0])
+	;
+
+/*
+    int fd;
+    char *line;
+    int i;
+
+    i = 1;
+	line = NULL;
+    if (argc >= 2)
+    {
+        while (i < argc)
+        {
+            fd = open(argv[i], O_RDONLY);
+            while (get_next_line(fd, &line) > 0)
+            {
+            	printf("|%s|\n", line);
+                ft_memdel((void **)&line);
+            }
+//	printf("|%s|\n", line);
+            close (fd);
+            i++;
+        }
+    }
+//sleep(30);
+*/
+    return (0);
+}  
