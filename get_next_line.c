@@ -47,7 +47,7 @@ int    get_next_line(const int fd, char **line)
 	static char *ft_eol = NULL;
 
 	bits_read = 1;
-	if (!fd || fd < 0 || BUFF_SIZE < 1)
+	if (fd < 0 || BUFF_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (-1);
 	if (!buf[fd])
 		buf[fd] = ft_strnew(BUFF_SIZE + 1);
@@ -61,34 +61,82 @@ int    get_next_line(const int fd, char **line)
 	ft_eol = ft_strchr(buf[fd], '\n') + 1;
 	buf[fd][ft_strchri(buf[fd], '\n')] = '\0';
 	*line = ft_strdup(buf[fd]);
+	//printf("line is %s\n", *line);
 	ft_bzero(buf[fd], ft_strlen(buf[fd]));
 	if (bits_read <= 0)
 		return ((bits_read == 0) ? 0 : -1);
 	return (1);
 }
+/*
+#include <string.h>
+#include <stdio.h>
+
+int				main(void)
+{
+	char		*line;
+	int			fd;
+	int			ret;
+	int			count_lines;
+	int			errors;
+
+	fd = 0;
+	count_lines = 0;
+	errors = 0;
+	line = NULL;
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		printf("line 1 is %s", line);
+		if (count_lines == 0 && strcmp(line, "1234567890abcde") != 0)
+			errors++;
+		count_lines++;
+		if (count_lines > 50)
+			break ;
+	}
+	printf("line 2 is %s", line);
+	if (count_lines != 1)
+		printf("-> must have returned '1' once instead of %d time(s)\n", count_lines);
+	if (errors > 0)
+		printf("-> must have read \"1234567890abcde\" instead of \"%s\"\n", line);
+	if (count_lines == 1 && errors == 0)
+		printf("OK\n");
+	return (0);
+}
+
+
 
 #include <stdio.h>
 #include <fcntl.h>
 #include <assert.h>
 int    main(int argc, char **argv)
 {
-
 	char 	*line;
+	int		out;
+	int		p[2];
+	int		fd;
 
-	write(1, "aaa\nbbb\nccc\nddd\n", 16);
-	get_next_line(1, &line);
+	fd = 1;
+	out = dup(fd);
+	pipe(p);
+
+	dup2(p[1], fd);
+	write(fd, "aaa\nbbb\nccc\nddd\n", 16);
+	dup2(out, fd);
+	close(p[1]);
+	get_next_line(p[0], &line);
 	assert(strcmp(line, "aaa") == 0);
-	get_next_line(1, &line);
+	get_next_line(p[0], &line);
 	assert(strcmp(line, "bbb") == 0);
-	get_next_line(1, &line);
+	get_next_line(p[0], &line);
 	assert(strcmp(line, "ccc") == 0);
-	get_next_line(1, &line);
+	get_next_line(p[0], &line);
 	assert(strcmp(line, "ddd") == 0);
+
+
 argc = 0 ;
 if (argv[0])
 	;
 
-/*
+
     int fd;
     char *line;
     int i;
@@ -111,6 +159,6 @@ if (argv[0])
         }
     }
 //sleep(30);
-*/
+
     return (0);
-}  
+} */ 
