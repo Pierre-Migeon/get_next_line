@@ -6,7 +6,7 @@
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 22:21:19 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/11/15 12:37:42 by pmigeon          ###   ########.fr       */
+/*   Updated: 2018/11/15 19:21:45 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,55 @@ int    get_next_line(const int fd, char **line)
 	return (1);
 }
 
+#include <string.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+/*
+** 1 line with 8 chars without Line Feed
+*/
+
+int				main(void)
+{
+	char		*line;
+	int			fd;
+	int			ret;
+	int			count_lines;
+	char		*filename;
+	int			errors;
+
+	filename = "gnl7_1.txt";
+	fd = open(filename, O_RDONLY);
+	if (fd > 2)
+	{
+		count_lines = 0;
+		errors = 0;
+		line = NULL;
+		while ((ret = get_next_line(fd, &line)) > 0)
+		{
+			printf("entered the shit");
+			if (count_lines == 0 && strcmp(line, "12345678") != 0)
+				errors++;
+			count_lines++;
+			if (count_lines > 50)
+				break ;
+		}
+		close(fd);
+		if (count_lines != 1)
+			printf("-> must have returned '1' once instead of %d time(s)\n", count_lines);
+		if (errors > 0)
+			printf("-> must have read \"12345678\" instead of \"%s\"\n", line);
+		if (count_lines == 1 && errors == 0)
+			printf("OK\n");
+	}
+	else
+		printf("An error occured while opening file %s\n", filename);
+	return (0);
+}
+
+
+/*
 int				main(void)
 {
 	char		*line;
@@ -90,7 +139,6 @@ int				main(void)
 		if (count_lines == 3 && strcmp(line, "defghijk") != 0)
 			errors++;
 		count_lines++;
-		printf("line is %s", line);
 		if (count_lines > 50)
 			break ;
 	}
@@ -104,7 +152,7 @@ int				main(void)
 }
 
 
-/*
+
 #include <string.h>
 #include <stdio.h>
 
