@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
-char	*ft_strjoinfree(char const *s1, char const *s2)
+char	*ft_strjoinfree(char *s1, char *s2)
 {
 	char	*merge;
 	size_t	len;
@@ -26,7 +27,7 @@ char	*ft_strjoinfree(char const *s1, char const *s2)
 		return (NULL);
 	ft_strcpy(merge, s1);
 	ft_strcat(merge, s2);
-	free((void *)s1);
+	//free((void *)s1);
 	return (merge);
 }
 
@@ -58,12 +59,10 @@ int		ft_spool(char **buf, int fd, char *temp)
 {
 	int bits_read;
 
-	while ((bits_read = read(fd, temp, BUFF_SIZE) > 0))
+	while ((bits_read = read(fd, temp, BUFF_SIZE)) > 0)
 	{
 		temp[bits_read] = '\0';
-		printf("~~~|%s|~~~", temp);
 		buf[fd] = ft_strjoinfree(buf[fd], temp);
-		printf("|%s|~~~\n", buf[fd]);
 		if(ft_strchr(buf[fd], '\n'))
 			break ;
 	}
@@ -72,29 +71,33 @@ int		ft_spool(char **buf, int fd, char *temp)
 
 int		get_next_line(const int fd, char **line)
 {
-	int				bits_read;
-	static char		*buf[5000];
+	int			bits_read;
+	static char		*buf[FD_MAX];
 	char			temp[BUFF_SIZE + 1];
 	char 			*ptr;
 
-	if (fd < 0 || BUFF_SIZE < 1 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFF_SIZE < 1 || read(fd, 0, 0) < 0 || fd > FD_MAX )
 		return (-1);
 	if (!buf[fd])
 		buf[fd] = ft_strnew(1);
 	bits_read = ft_spool(buf, fd, temp);
-	printf("````|%s|`````\n", buf[fd]);
 	if (!(ptr = ft_strchr(buf[fd], '\n')) && bits_read < BUFF_SIZE)
 		*line = ft_strdup(buf[fd]);
 	else
 		*line = ft_strsub(buf[fd], 0, (size_t)(ptr - buf[fd]));
-	ptr = buf[fd];
 	buf[fd] = ft_strchr(buf[fd], '\n');
 	if (buf[fd])
 		buf[fd]++;
-	free(ptr);
 	if (bits_read < 0)
 		return (-1);
-	return ((bits_read == 0 && *buf[fd] == '\0') ? 0 : 1);
+	if ((bits_read == 0 && *buf[fd] == '\0'))
+	{
+		//free(buf[fd]);
+		return (0);
+	}
+	while (1)
+		;
+	return (1);
 }
 
 

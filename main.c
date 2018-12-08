@@ -1,5 +1,6 @@
 #include <fcntl.h>
 #include "get_next_line.h"
+#include <stdio.h> 
 
 int		main(int argc, char **argv)
 {
@@ -17,7 +18,7 @@ int		main(int argc, char **argv)
 			fd = open(argv[i], O_RDONLY);
 			while ((r = get_next_line(fd, &line)) > 0)
 			{
-				printf("|return is %i and line is: \n %s|\n", r, line);
+				printf("|%s|", line);
 				ft_memdel((void **)&line);
 			}
 			printf("return is %i", r );
