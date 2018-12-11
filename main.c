@@ -18,14 +18,14 @@ int		main(int argc, char **argv)
 			fd = open(argv[i], O_RDONLY);
 			while ((r = get_next_line(fd, &line)) > 0)
 			{
-				printf("|%s|", line);
+				printf("%s\n", line);
 				ft_memdel((void **)&line);
 			}
-			printf("return is %i", r );
 			close (fd);
 			i++;
         	}
 	}
-
+//	while (1)
+//		;
 	return (0);
 }
