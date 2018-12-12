@@ -6,12 +6,10 @@
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 14:33:36 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/10/29 18:18:55 by pmigeon          ###   ########.fr       */
+/*   Updated: 2018/11/06 12:43:34 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
-#include <stdlib.h>
 #include "libft.h"
 
 static int		ft_wordcount(const char *str, char c)
@@ -52,7 +50,8 @@ char			**ft_strsplit(char const *s, char c)
 
 	i = 0;
 	j = 0;
-	if (!s || !c || !(split = (char **)malloc(sizeof(char *) * ft_wordcount(s, c))))
+	if (!s || !c || !(split = (char **)malloc(
+					sizeof(char *) * ft_wordcount(s, c))))
 		return (NULL);
 	while ((size_t)j < ft_strlen(s))
 	{

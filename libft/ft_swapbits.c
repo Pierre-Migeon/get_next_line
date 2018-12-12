@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 unsigned char	ft_swapbits(unsigned char octet)
 {
 	return (octet >> 4 | octet << 4);

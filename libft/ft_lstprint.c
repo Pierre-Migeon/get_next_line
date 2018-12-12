@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_lstprint.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/24 10:18:17 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/10/23 13:04:51 by pmigeon          ###   ########.fr       */
+/*   Created: 2018/11/06 13:37:50 by pmigeon           #+#    #+#             */
+/*   Updated: 2018/11/10 20:22:29 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+void	ft_lstprint(t_list *lst)
 {
-	if (n == 0)
-		return (0);
-	while (*s1 && *s2 && *s1 == *s2 && --n)
+	while (lst)
 	{
-		s1++;
-		s2++;
+		write(1, lst->content, lst->content_size);
+		lst = lst->next;
 	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	write(1, "\n", 1);
 }

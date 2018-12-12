@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_numlen.c                                        :+:      :+:    :+:   */
+/*   ft_printbits.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/28 12:14:55 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/09/28 12:15:03 by pmigeon          ###   ########.fr       */
+/*   Created: 2018/11/04 13:55:49 by pmigeon           #+#    #+#             */
+/*   Updated: 2018/11/04 14:25:34 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_numlen(int n, int base)
+#include "libft.h"
+
+void	ft_printbits(unsigned char octet)
 {
 	int i;
 
-	i = 0;
-	if (n == 0)
-		return (1);
-	if (n < 0)
-		i++;
-	while (n != 0)
+	i = 128;
+	while (i)
 	{
-		n /= base;
-		i++;
+		ft_putchar('0' + ((i & octet) && 1));
+		i >>= 1;
 	}
-	return (i);
 }

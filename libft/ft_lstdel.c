@@ -6,7 +6,7 @@
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/30 16:52:27 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/10/30 17:58:47 by pmigeon          ###   ########.fr       */
+/*   Updated: 2018/11/06 12:36:25 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_lstdel(t_list **alst, void (*del)(void *, size_t))
 {
 	t_list *current;
-	t_list *next;	
+	t_list *next;
 
 	if (!*alst || !alst)
 		return ;

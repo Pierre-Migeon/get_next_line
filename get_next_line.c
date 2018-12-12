@@ -6,14 +6,13 @@
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/30 12:38:59 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/12/08 18:45:35 by pmigeon          ###   ########.fr       */
+/*   Updated: 2018/12/11 21:27:02 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-char	*ft_strjoinf(char *s1, char *s2)
+char	*ft_strjoinf(const char *s1, const char *s2)
 {
 	char	*merge;
 	size_t	len;
@@ -42,6 +41,18 @@ int		ft_strchri(const char *s, int c)
 	return (-1);
 }
 
+int		ft_strcmpz(const char *s1, const char *s2)
+{
+	if (!s1)
+		return (0);
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}
+
 int		ft_spool(char **buf, int fd, char *temp)
 {
 	int bits_read;
@@ -58,7 +69,7 @@ int		ft_spool(char **buf, int fd, char *temp)
 
 int		get_next_line(const int fd, char **line)
 {
-	int			bits_read;
+	int				bits_read;
 	static char		*buf[FD_MAX];
 	char			temp[BUFF_SIZE + 1];
 	char			*ptr;
@@ -71,10 +82,12 @@ int		get_next_line(const int fd, char **line)
 		return (-1);
 	ptr2 = buf[fd];
 	if (!(ptr = ft_strchr(buf[fd], '\n')) && bits_read < BUFF_SIZE)
-		*line = (ft_strcmp(buf[fd], "") != 0) ? ft_strdup(buf[fd]) : NULL;
+		*line = (ft_strcmpz(buf[fd], "") != 0) ? ft_strdup(buf[fd]) : NULL;
 	else
-		*line = ((size_t)(ptr - buf[fd]) != 0) ? ft_strsub(buf[fd], 0, (size_t)(ptr - buf[fd])) : NULL;
-	buf[fd] = ft_strchr(buf[fd], '\n') ? ft_strdup(ft_strchr(buf[fd], '\n') + 1) : NULL;
+		*line = ((size_t)(ptr - buf[fd]) != 0)
+			? ft_strsub(buf[fd], 0, (size_t)(ptr - buf[fd])) : NULL;
+	buf[fd] = ft_strchr(buf[fd], '\n')
+		? ft_strdup(ft_strchr(buf[fd], '\n') + 1) : NULL;
 	free(ptr2);
 	if (bits_read == 0 && buf[fd] == '\0' && !*line)
 		return (0);

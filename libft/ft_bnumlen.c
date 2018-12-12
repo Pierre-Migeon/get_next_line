@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_bnumlen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/24 10:18:17 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/10/23 13:04:51 by pmigeon          ###   ########.fr       */
+/*   Created: 2018/11/06 15:03:15 by pmigeon           #+#    #+#             */
+/*   Updated: 2018/11/10 20:31:41 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+int		ft_bnumlen(int n, int base)
 {
+	int i;
+
+	i = 0;
 	if (n == 0)
-		return (0);
-	while (*s1 && *s2 && *s1 == *s2 && --n)
+		return (1);
+	if (n < 0)
+		i++;
+	while (n != 0)
 	{
-		s1++;
-		s2++;
+		n /= base;
+		i++;
 	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	return (i);
 }

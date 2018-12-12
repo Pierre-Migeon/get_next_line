@@ -6,7 +6,7 @@
 /*   By: pmigeon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/30 20:14:35 by pmigeon           #+#    #+#             */
-/*   Updated: 2018/10/30 20:22:55 by pmigeon          ###   ########.fr       */
+/*   Updated: 2018/11/06 15:48:16 by pmigeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ void	ft_lstiter(t_list *lst, void (*f)(t_list *elem))
 {
 	if (!f || !lst)
 		return ;
-	while (*lst)
+	while (lst)
 	{
 		(*f)(lst);
-		*lst = lst->next;
+		lst = lst->next;
 	}
 }
