@@ -26,7 +26,7 @@ char	*ft_strjoinf(const char *s1, const char *s2)
 		return (NULL);
 	ft_strcpy(merge, s1);
 	ft_strcat(merge, s2);
-	free(s1);
+	free((void *)s1);
 	return (merge);
 }
 
